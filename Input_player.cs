@@ -27,7 +27,7 @@ public class Input_player : MonoBehaviour
 	private float 	distance_player_plataforma = 0;
 	private float 	rotacao;
 	private float 	y_contato; 
-	private int 	alternante_metade = -1;
+	private int 	alternante;
 
 	void Update()
 	{	
@@ -41,24 +41,25 @@ public class Input_player : MonoBehaviour
 		float aceleracao_ajustada = rb_2d_jogador.gravityScale * (9 + .8f);
 
 		RaycastHit2D raycast = Physics2D.Raycast(posicao_raycast, Vector2.up * Mathf.Sign(rb_2d_jogador.gravityScale), Mathf.Infinity, plataforma_contato);
-		posicao_raycast = new Vector2(velocidade_plats * (raycast.distance/ Mathf.Abs(aceleracao_ajustada)), box_collider_jogador.bounds.center.y);
+		posicao_raycast = new Vector2(velocidade_plats * (raycast.distance/ Mathf.Abs(aceleracao_ajustada)), box_collider_jogador.bounds.center.y - (box_collider_jogador.bounds.extents.y * Mathf.Sign(rb_2d_jogador.gravityScale)));
 
-		// Debug.DrawRay(posicao_raycast, Vector2.up * 10 * Mathf.Sign(rb_2d_jogador.gravityScale), Color.red, 1, true);
-
-		foreach(Touch touch in Input.touches){
-			if (touch.phase == TouchPhase.Began){
-				distance_player_plataforma = raycast.distance;
-				y_contato = transform.position.y;
-				alternante_metade *= -1;
+		if(box_collider_jogador.IsTouchingLayers(plataforma_contato)){
+			foreach(Touch touch in Input.touches){
+				if (touch.phase == TouchPhase.Began){
+					distance_player_plataforma = raycast.distance;
+					y_contato = box_collider_jogador.bounds.center.y - (box_collider_jogador.bounds.extents.y * Mathf.Sign(rb_2d_jogador.gravityScale));
+					alternante =  -1 * (int)Mathf.Sign(y_contato);
+				}
 			}
 		}
+
 		//Raio metade
-		Debug.DrawRay(new Vector2(-10,  y_contato  + (alternante_metade * ((distance_player_plataforma/2) - box_collider_jogador.bounds.extents.y))	), Vector2.right * 10, Color.blue, 1, true);
+		Debug.DrawRay(new Vector2(-10, y_contato + (distance_player_plataforma * alternante/ 2)	), Vector2.right * 10, Color.blue, 1, true);
 
 		//Raio distancia
 		Debug.DrawRay(posicao_raycast, Vector2.up * raycast.distance * Mathf.Sign(rb_2d_jogador.gravityScale), Color.red, 1, true);
 
-		if(transform.position.y > y_contato  + (alternante_metade  * ((distance_player_plataforma/2) - box_collider_jogador.bounds.extents.y))){
+		if(box_collider_jogador.bounds.center.y > y_contato + (distance_player_plataforma * alternante/ 2)){
 			rotacao = 180;
 		}else{
 			rotacao = 0;
