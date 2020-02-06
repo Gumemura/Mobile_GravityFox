@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Text_Blink : MonoBehaviour
 {
@@ -17,6 +18,6 @@ public class Text_Blink : MonoBehaviour
     }
 
 	void blink_text(){
-    	gameObject.SetActive(gameObject.activeSelf == false);
+        gameObject.GetComponent<TMP_Text>().enabled = (gameObject.GetComponent<TMP_Text>().enabled == false);
 	}
 }
