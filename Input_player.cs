@@ -8,6 +8,7 @@ public class Input_player : MonoBehaviour
 	public LayerMask 	inimigo_contato;
 	public GameObject 	plataformas_velocidade;
 	public GameObject 	placar;
+	public Vector2    	posicao_inicial;  
 
 	private Rigidbody2D 		rb_2d_jogador;
 	private BoxCollider2D 		box_collider_jogador;
@@ -24,6 +25,7 @@ public class Input_player : MonoBehaviour
 		box_collider_jogador 		= GetComponent<BoxCollider2D>();
 
 		posicao_raycast = box_collider_jogador.bounds.center;
+		posicao_inicial = transform.position;
 		x_inicial = box_collider_jogador.bounds.center.x;
 		y_inicial = box_collider_jogador.bounds.center.y;
 	}
@@ -36,12 +38,12 @@ public class Input_player : MonoBehaviour
 	private int 	alternante;
 
 	void Update()
-	{	
-		rotacao_jogador();
-		
+	{
+
 	}
 
 	void FixedUpdate(){
+		rotacao_jogador();
 		mantendo_passo();
 		morreu();
 	}
@@ -80,7 +82,7 @@ public class Input_player : MonoBehaviour
 	}
 
 	void mantendo_passo(){
-		if(box_collider_jogador.bounds.center.x < x_inicial && box_collider_jogador.bounds.center.x > x_inicial - 3){
+		if(box_collider_jogador.bounds.center.x < x_inicial && box_collider_jogador.bounds.center.x > x_inicial - 5){
 			rb_2d_jogador.velocity = new Vector2(1, rb_2d_jogador.velocity.y);
 		}
 	}
